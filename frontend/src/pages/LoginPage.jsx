@@ -10,8 +10,8 @@ export default function LoginPage() {
                 <input type="password" placeholder='Password'/>
                 <button className="primary">Log in</button>
                 <div className="text-center py-2 text-gray-500">
-                    Create Account 
-                    <Link className="underline text-black" to={ '/register' }>Register now</Link>
+                    Don't have an Account?
+                    <Link className="underline text-black" to={ '/signup' }>Signup now</Link>
                 </div>
               </form>
           </div>
