@@ -18,8 +18,6 @@ export default function LoginPage() {
         password
       })
       setUser(response.data);
-      alert('Login Successful')
-
       setRedirect(true)
     } catch (error) {
       alert('Login Failed')
