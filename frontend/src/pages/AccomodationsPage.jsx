@@ -1,48 +1,97 @@
 import { Link, useParams } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 export default function AccomodationsPage() {
     const { action } = useParams();
+    const [title, setTitle] = useState('');
+    const [address, setAddress] = useState('');
+    const [addedPhotos, setAddedPhotos] = useState([]);
+    const [photoLink, setPhotoLink] = useState('');
+    const [description, setDescription] = useState('');
+    const [features, setFeatures] = useState([]);
+    const [houseRules, setHouseRules] = useState('');
+    const [checkIn, setCheckIn] = useState('');
+    const [checkOut, setCheckOut] = useState('');
+    const [maxGuests, setMaxGuests] = useState(1);
+
+    async function addPhotoBylink(e) {
+        e.preventDefault();
+        const { data: filename } = await axios.post('/upload-with-link', { link: photoLink })
+        setAddedPhotos(prev => {
+            return [...prev, filename];
+        });
+        setPhotoLink('');
+    }
+
+    async function uploadPhoto(e) {
+        const files = e.target.files;
+        const data = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            data.append('photos', files[i]);
+        }
+        const { data: filename } = await axios.post('/upload', data, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        setAddedPhotos(prev => {
+            return [...prev, ...filename];
+        });
+    }
 
     return (
         <div>
             {action !== 'new' && (
-                <div className="text-center">
+              <div className="text-center">
                 <Link className="inline-flex gap-1 bg-primary text-white py-2 px-6 rounded-full" to={'/account/accomodations/new'}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                         <path fillRule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
                     </svg>
                     Add new place
                 </Link>
-            </div>
+              </div>
             )}
             {action === 'new' && (
-                <div>
+                <div className="flex justify-center">
                     <form>
                         <h2 className="text-2xl mt-4">Title</h2>
-                        <input type="text" placeholder="Title: Stunning House with Private Beach" />
+                        <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Title: Stunning House with Private Beach" />
 
                         <h2 className="text-2xl mt-4">Address</h2>
-                        <input type="text" placeholder="Address" />
+                        <input type="text" value={address} onChange={e => setAddress(e.target.value)} placeholder="Address" />
 
                         <h2 className="text-2xl mt-4">Photos</h2>
-                        <div className="mt-4 grid grid-cols-4 md:grid-cols-5 lg:grid-cols-7">
-                            <button className="flex justify-center gap-1 border bg-transparent rounded-2xl p-8 text-2xl text-gray-500">
+                        <div className="flex gap-2">
+                            <input type="text" 
+                                   value={photoLink} 
+                                   onChange={e => setPhotoLink(e.target.value)} 
+                                   placeholder={ 'Add using a link' } />
+                            <button onClick={addPhotoBylink} className="bg-gray-200 px-4 rounded-2xl">Add&nbsp;Photo</button>
+                        </div>
+                        
+                        <div className="mt-4 grid gap-2 grid-cols-4 md:grid-cols-5 lg:grid-cols-7">
+                            { addedPhotos.length > 0 && addedPhotos.map((link, index) => (
+                                <div className="h-32 flex" key={link}>
+                                    <img className="rounded-2xl w-full object-cover" src={ 'http://localhost:4000/uploads/' + link } alt={`Uploaded Image ${index + 1}`} />
+                                </div>
+                            ))}
+                            <label type="button" className="h-32 cursor-pointer flex items-center justify-center gap-1 border bg-transparent rounded-2xl p-2 text-2xl text-gray-500">
+                                <input type="file" multiple className="hidden" onChange={uploadPhoto} />
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
                                     <path fillRule="evenodd" d="M11.47 2.47a.75.75 0 0 1 1.06 0l4.5 4.5a.75.75 0 0 1-1.06 1.06l-3.22-3.22V16.5a.75.75 0 0 1-1.5 0V4.81L8.03 8.03a.75.75 0 0 1-1.06-1.06l4.5-4.5ZM3 15.75a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z" clipRule="evenodd" />
                                 </svg>
                                 Upload
-                            </button>
+                            </label>
                         </div>
 
                         <h2 className="text-2xl mt-4">Description</h2>
                         <p className="text-gray-500 text-sm mt-2">Luxurious rental overlooking the beach</p>
-                        <textarea />
+                        <textarea value={description} onChange={e => setDescription(e.target.value)} />
 
                         <h2 className="text-2xl mt-4">Features</h2>
                         <p className="text-gray-500 text-sm mt-2">Select all of the features of your home</p>
                         <div className="grid gap-2 grid-cols-2 md:grid-cols-3 lg:grid-cols-6 mt-2">
                             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
-                                <input type="checkbox" />
+                                <input type="checkbox" value={features} onChange={e => setFeatures(e.target.value)} />
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
                                         <path fillRule="evenodd" d="M1.371 8.143c5.858-5.857 15.356-5.857 21.213 0a.75.75 0 0 1 0 1.061l-.53.53a.75.75 0 0 1-1.06 0c-4.98-4.979-13.053-4.979-18.032 0a.75.75 0 0 1-1.06 0l-.53-.53a.75.75 0 0 1 0-1.06Zm3.182 3.182c4.1-4.1 10.749-4.1 14.85 0a.75.75 0 0 1 0 1.061l-.53.53a.75.75 0 0 1-1.062 0 8.25 8.25 0 0 0-11.667 0 .75.75 0 0 1-1.06 0l-.53-.53a.75.75 0 0 1 0-1.06Zm3.204 3.182a6 6 0 0 1 8.486 0 .75.75 0 0 1 0 1.061l-.53.53a.75.75 0 0 1-1.061 0 3.75 3.75 0 0 0-5.304 0 .75.75 0 0 1-1.06 0l-.53-.53a.75.75 0 0 1 0-1.06Zm3.182 3.182a1.5 1.5 0 0 1 2.122 0 .75.75 0 0 1 0 1.061l-.53.53a.75.75 0 0 1-1.061 0l-.53-.53a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
                                     </svg>
@@ -86,24 +135,33 @@ export default function AccomodationsPage() {
                         </div>
 
                         <h2 className="text-2xl mt-4">House Rules</h2>
-                        <textarea />
+                        <textarea value={houseRules} onChange={e => setHouseRules(e.target.value)} />
 
                         <h2 className="text-2xl mt-4">Check in/ Check out</h2>
                         <p className="text-gray-500 text-sm mt-2">Remember to leave some time in between guests for proper cleaning!</p>
                         <div className="grid gap-2 sm:grid-cols-3">
                             <div className="mt-2 -mb-1">
                                 <h3>Check In Time</h3>
-                                <input type="text" placeholder="8AM" />
+                                <input type="text" 
+                                       value={checkIn} 
+                                       onChange={e => setCheckIn(e.target.value)} 
+                                       placeholder="8AM" />
                             </div>
 
                             <div className="mt-2 -mb-1">
                                 <h3>Check Out Time</h3>
-                                <input type="text" placeholder="10PM" />
+                                <input type="text" 
+                                       value={checkOut}
+                                        onChange={e => setCheckOut(e.target.value)} 
+                                        placeholder="10PM" />
                             </div>
 
                             <div className="mt-2 -mb-1">
                                 <h3>Max Guests</h3>
-                                <input type="text" placeholder="10" />
+                                <input type="number" 
+                                       value={maxGuests} 
+                                       onChange={e => setMaxGuests(e.target.value)} 
+                                       placeholder="10" />
                             </div>
                         </div>
                             <button className="primary my-6">Save</button>
