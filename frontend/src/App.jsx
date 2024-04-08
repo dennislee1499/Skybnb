@@ -1,13 +1,15 @@
 import './App.css'
 import './index.css'
 import { Route, Routes } from "react-router-dom";
+import { UserContextProvider } from './context/UserContext';
 import HomePage from "./pages/HomePage"
 import LoginPage from "./pages/LoginPage"
 import SignupPage from './pages/SignupPage';
-import AccountPage from './pages/AccountPage';
+import ProfilePage from './pages/ProfilePage';
 import Layout from './Layout';
 import axios from 'axios';
-import { UserContextProvider } from './context/UserContext';
+import AccomodationsPage from './pages/AccomodationsPage';
+import AccomodationsFormPage from './pages/AccomodationsFormPage';
 
 axios.defaults.baseURL = 'http://localhost:4000';
 axios.defaults.withCredentials = true;
@@ -21,8 +23,9 @@ function App() {
           <Route index element={ <HomePage /> } />
           <Route path="/login" element={ <LoginPage /> } />
           <Route path="/signup" element={ <SignupPage /> } />
-          <Route  path="/account/:subpage?" element={ <AccountPage /> } />
-          <Route  path="/account/:subpage?/:action" element={ <AccountPage /> } />
+          <Route path="/account" element={ <ProfilePage /> } />
+          <Route path="/account/accomodations" element={ <AccomodationsPage /> } />
+          <Route path="/account/accomodations/new" element={ <AccomodationsFormPage /> } />
         </Route>
       </Routes>
     </UserContextProvider>
