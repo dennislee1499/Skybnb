@@ -13,7 +13,8 @@ export default function HouseFeatures({ selected, onChange }) {
         <>
             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
                 <input 
-                    type="checkbox" 
+                    type="checkbox"
+                    checked={selected.includes('wifi')} 
                     name="wifi" 
                     onChange={handleCheckbox} 
                 />
@@ -25,7 +26,8 @@ export default function HouseFeatures({ selected, onChange }) {
 
             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
                 <input 
-                    type="checkbox" 
+                    type="checkbox"
+                    checked={selected.includes('parking')} 
                     name="parking" 
                     onChange={ handleCheckbox } 
                 />
@@ -39,7 +41,8 @@ export default function HouseFeatures({ selected, onChange }) {
 
             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
                 <input 
-                    type="checkbox" 
+                    type="checkbox"
+                    checked={selected.includes('cable')} 
                     name="cable" 
                     onChange={ handleCheckbox } 
                 />
@@ -53,6 +56,7 @@ export default function HouseFeatures({ selected, onChange }) {
             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
                 <input 
                     type="checkbox"
+                    checked={selected.includes('alarm')}
                     name="alarm" 
                     onChange={ handleCheckbox } 
                 />
@@ -64,7 +68,8 @@ export default function HouseFeatures({ selected, onChange }) {
 
             <label className="border p-4 flex rounded-2xl gap-2 items-center cursor-pointer">
                 <input 
-                    type="checkbox" 
+                    type="checkbox"
+                    checked={selected.includes('pets')} 
                     name="pets" 
                     onChange={ handleCheckbox } 
                 />

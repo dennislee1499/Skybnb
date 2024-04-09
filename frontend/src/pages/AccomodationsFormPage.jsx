@@ -1,30 +1,58 @@
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Navigate, useParams } from "react-router-dom";
 import PhotosUploader from "../components/PhotosUploader";
 import HouseFeatures from "../components/HouseFeatures";
 import axios from "axios";
 import AccountNav from "../AccountNav";
 
 export default function AccomodationsFormPage() {
+    const { id } = useParams();
     const [title, setTitle] = useState('');
     const [address, setAddress] = useState('');
     const [description, setDescription] = useState('');
     const [features, setFeatures] = useState([]);
     const [addedPhotos, setAddedPhotos] = useState([]);
-    const [houseRules, setHouseRules] = useState('');
+    const [rules, setRules] = useState('');
     const [checkIn, setCheckIn] = useState('');
     const [checkOut, setCheckOut] = useState('');
     const [maxGuests, setMaxGuests] = useState(1);
     const [redirect, setRedirect] = useState(false); 
 
-    async function addNewPlace(e) {
-        e.preventDefault(); 
-        await axios.post('/accomodations', {
-            title, address, addedPhotos, 
-            description, features, houseRules, 
-            checkIn, checkOut, maxGuests
+    useEffect(() => {
+        if (!id) {
+            return;
+        }
+        axios.get('/accomodations/'+id).then(response => {
+            const { data } = response; 
+            setTitle(data.title);
+            setAddress(data.address);
+            setAddedPhotos(data.photos);
+            setDescription(data.description); 
+            setFeatures(data.features);
+            setRules(data.rules);
+            setCheckIn(data.checkIn);
+            setCheckOut(data.checkOut);
+            setMaxGuests(data.maxGuests);
         });
-        setRedirect(true); 
+    }, [id]);
+
+    async function savePlace(e) {
+        e.preventDefault(); 
+        const placeData = {
+            title, address, addedPhotos, 
+            description, features, rules, 
+            checkIn, checkOut, maxGuests
+        };
+
+        if (id) {
+            await axios.put('/accomodations', {
+            id, ...placeData
+        });
+            setRedirect(true); 
+        } else {
+            await axios.post('/accomodations', placeData);
+            setRedirect(true);
+        }
     }
 
     if (redirect) {
@@ -35,7 +63,7 @@ export default function AccomodationsFormPage() {
         <>
             <AccountNav />
             <div className="flex justify-center">
-                <form onSubmit={ addNewPlace }>
+                <form onSubmit={ savePlace }>
                     <h2 className="text-2xl mt-4">Title</h2>
                     <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Title: Stunning House with Private Beach" />
 
@@ -56,7 +84,7 @@ export default function AccomodationsFormPage() {
                     </div>
 
                     <h2 className="text-2xl mt-4">House Rules</h2>
-                    <textarea value={houseRules} onChange={e => setHouseRules(e.target.value)} />
+                    <textarea value={rules} onChange={e => setRules(e.target.value)} />
 
                     <h2 className="text-2xl mt-4">Check in/ Check out</h2>
                     <p className="text-gray-500 text-sm mt-2">Remember to leave some time in between guests for proper cleaning!</p>

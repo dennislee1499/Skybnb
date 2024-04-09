@@ -1,7 +1,16 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import AccountNav from "../AccountNav";
 
 export default function AccomodationsPage() {
+    const [accomodations, setAccomodations] = useState([]);
+
+    useEffect(() => {
+        axios.get('/accomodations').then(({ data }) => {
+            setAccomodations(data)
+        });
+    }, []);
 
     return (
         <div>
@@ -13,6 +22,21 @@ export default function AccomodationsPage() {
                     </svg>
                     Add new place
                 </Link>
+              </div>
+              <div className="mt-4">
+                {accomodations.length > 0 && accomodations.map(place => (
+                    <Link to={'/account/accomodations/'+place._id} key={accomodations._id} className="flex cursor-pointer gap-4 bg-gray-100 p-4 rounded-2xl">
+                        <div className="w-32 h-32 bg-gray-300 grow shrink-0">
+                            {place.photos.length && (
+                                <img src={place.photos[0]} alt="" />
+                            )}
+                        </div>
+                        <div className="grow-0 shrink">
+                            <h2 className="text-xl">{place.title}</h2>
+                            <p className="text-sm mt-2">{place.description}</p>
+                        </div>
+                    </Link>
+                ))}
               </div>
         </div>
     )

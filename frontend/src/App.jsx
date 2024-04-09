@@ -26,6 +26,7 @@ function App() {
           <Route path="/account" element={ <ProfilePage /> } />
           <Route path="/account/accomodations" element={ <AccomodationsPage /> } />
           <Route path="/account/accomodations/new" element={ <AccomodationsFormPage /> } />
+          <Route path="/account/accomodations/:id" element={ <AccomodationsFormPage /> } />
         </Route>
       </Routes>
     </UserContextProvider>

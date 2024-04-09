@@ -99,7 +99,7 @@ app.post('/upload-with-link', async (req, res) => {
     res.json(newName);
 })
 
-app.post('/accomodations', (req, res) => {
+app.post('/accomodations', async (req, res) => {
     const { token } = req.cookies;
     const { 
         title, address, addedPhotos, 
@@ -111,12 +111,49 @@ app.post('/accomodations', (req, res) => {
         if (err) throw err; 
         const placeDoc = await Place.create({
             owner: userData.id,
-            title, address, addedPhotos, 
+            title, address, photos:addedPhotos, 
             description, features, rules, 
             checkIn, checkOut, maxGuests,
         })
         res.json(placeDoc);
-    })
+    });
+});
+
+app.get('/accomodations', (req, res) => {
+    const { token } = req.cookies;
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+        const { id } = userData;
+        res.json( await Place.find({ owner:id }) )
+    });
+});
+
+app.get('/accomodations/:id', async (req, res) => {
+    const { id } = req.params;
+    res.json(await Place.findById(id))
+});
+
+app.put('/accomodations', async (req, res) => {
+    const { token } = req.cookies;
+    const { 
+        id, title, address, addedPhotos, 
+        description, features, rules, 
+        checkIn, checkOut, maxGuests, 
+    } = req.body;
+
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+        if (err) throw err; 
+        const placeDoc = await Place.findById(id);
+
+        if (userData.id === placeDoc.owner.toString()) {
+            placeDoc.set ({
+                title, address, addedPhotos, 
+                description, features, rules, 
+                checkIn, checkOut, maxGuests,
+            });
+            await placeDoc.save();
+            res.json('ok');
+        }
+    });
 })
 
 const photosMiddleware = multer({ dest: 'uploads' });
