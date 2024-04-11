@@ -146,7 +146,7 @@ app.put('/accomodations', async (req, res) => {
 
         if (userData.id === placeDoc.owner.toString()) {
             placeDoc.set ({
-                title, address, addedPhotos, 
+                title, address, photos:addedPhotos, 
                 description, features, rules, 
                 checkIn, checkOut, maxGuests,
             });
