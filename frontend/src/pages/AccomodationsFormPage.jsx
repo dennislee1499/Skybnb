@@ -16,6 +16,7 @@ export default function AccomodationsFormPage() {
     const [checkIn, setCheckIn] = useState('');
     const [checkOut, setCheckOut] = useState('');
     const [maxGuests, setMaxGuests] = useState(1);
+    const [price, setPrice] = useState(100);
     const [redirect, setRedirect] = useState(false); 
 
     useEffect(() => {
@@ -33,6 +34,7 @@ export default function AccomodationsFormPage() {
             setCheckIn(data.checkIn);
             setCheckOut(data.checkOut);
             setMaxGuests(data.maxGuests);
+            setPrice(data.price);
         });
     }, [id]);
 
@@ -41,7 +43,7 @@ export default function AccomodationsFormPage() {
         const placeData = {
             title, address, addedPhotos, 
             description, features, rules, 
-            checkIn, checkOut, maxGuests
+            checkIn, checkOut, maxGuests, price
         };
 
         if (id) {
@@ -88,7 +90,7 @@ export default function AccomodationsFormPage() {
 
                     <h2 className="text-2xl mt-4">Check in/ Check out</h2>
                     <p className="text-gray-500 text-sm mt-2">Remember to leave some time in between guests for proper cleaning!</p>
-                    <div className="grid gap-2 sm:grid-cols-3">
+                    <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
                         <div className="mt-2 -mb-1">
                             <h3>Check In Time</h3>
                             <input type="text" 
@@ -111,6 +113,14 @@ export default function AccomodationsFormPage() {
                                     value={maxGuests} 
                                     onChange={e => setMaxGuests(e.target.value)} 
                                     placeholder="10" />
+                        </div>
+
+                        <div className="mt-2 -mb-1">
+                            <h3>Price per night</h3>
+                            <input type="number" 
+                                    value={price} 
+                                    onChange={e => setPrice(e.target.value)} 
+                                    placeholder="$100" />
                         </div>
                     </div>
                         <button className="primary my-6">Save</button>

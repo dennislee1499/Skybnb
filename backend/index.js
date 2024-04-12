@@ -104,7 +104,8 @@ app.post('/accomodations', async (req, res) => {
     const { 
         title, address, addedPhotos, 
         description, features, rules, 
-        checkIn, checkOut, maxGuests, 
+        checkIn, checkOut, maxGuests,
+        price,  
     } = req.body; 
 
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -113,13 +114,13 @@ app.post('/accomodations', async (req, res) => {
             owner: userData.id,
             title, address, photos:addedPhotos, 
             description, features, rules, 
-            checkIn, checkOut, maxGuests,
+            checkIn, checkOut, maxGuests, price,
         })
         res.json(placeDoc);
     });
 });
 
-app.get('/accomodations', (req, res) => {
+app.get('/user-accomodations', (req, res) => {
     const { token } = req.cookies;
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
         const { id } = userData;
@@ -137,7 +138,7 @@ app.put('/accomodations', async (req, res) => {
     const { 
         id, title, address, addedPhotos, 
         description, features, rules, 
-        checkIn, checkOut, maxGuests, 
+        checkIn, checkOut, maxGuests, price,
     } = req.body;
 
     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
@@ -145,15 +146,20 @@ app.put('/accomodations', async (req, res) => {
         const placeDoc = await Place.findById(id);
 
         if (userData.id === placeDoc.owner.toString()) {
+            console.log({price})
             placeDoc.set ({
                 title, address, photos:addedPhotos, 
                 description, features, rules, 
-                checkIn, checkOut, maxGuests,
+                checkIn, checkOut, maxGuests, price,
             });
             await placeDoc.save();
             res.json('ok');
         }
     });
+})
+
+app.get('/accomodations', async (req, res) => {
+    res.json(await Place.find()); 
 })
 
 const photosMiddleware = multer({ dest: 'uploads' });

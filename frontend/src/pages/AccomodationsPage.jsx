@@ -7,7 +7,7 @@ export default function AccomodationsPage() {
     const [accomodations, setAccomodations] = useState([]);
 
     useEffect(() => {
-        axios.get('/accomodations').then(({ data }) => {
+        axios.get('/user-accomodations').then(({ data }) => {
             setAccomodations(data)
         });
     }, []);
