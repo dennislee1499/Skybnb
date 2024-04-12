@@ -6,7 +6,7 @@ export default function HomePage() {
 
     useEffect(() => {
         axios.get('/accomodations').then(res => {
-            setAccomodations([...res.data, ...res.data, ...res.data, ...res.data]);
+            setAccomodations([...res.data]);
         })
     }, []);
 
@@ -22,7 +22,7 @@ export default function HomePage() {
                     </div>
                     <h2 className="font-medium">{place.address}</h2>
                     <h3 className="text-sm text-gray-500">{place.title}</h3>
-                    <div className="mt-1">
+                    <div>
                         <span className="font-semibold">${place.price}</span> night
                     </div>
                 </div>
