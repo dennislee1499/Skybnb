@@ -10,6 +10,8 @@ import Layout from './Layout';
 import axios from 'axios';
 import AccomodationsPage from './pages/AccomodationsPage';
 import AccomodationsFormPage from './pages/AccomodationsFormPage';
+import AccomodationPage from './pages/AccomodationPage';
+
 
 axios.defaults.baseURL = 'http://localhost:4000';
 axios.defaults.withCredentials = true;
@@ -27,6 +29,7 @@ function App() {
           <Route path="/account/accomodations" element={ <AccomodationsPage /> } />
           <Route path="/account/accomodations/new" element={ <AccomodationsFormPage /> } />
           <Route path="/account/accomodations/:id" element={ <AccomodationsFormPage /> } />
+          <Route path="/accomodation/:id" element={ <AccomodationPage /> } />
         </Route>
       </Routes>
     </UserContextProvider>

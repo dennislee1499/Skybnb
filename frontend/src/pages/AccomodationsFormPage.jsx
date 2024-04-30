@@ -96,7 +96,7 @@ export default function AccomodationsFormPage() {
                             <input type="text" 
                                     value={checkIn} 
                                     onChange={e => setCheckIn(e.target.value)} 
-                                    placeholder="8AM" />
+                                    placeholder="3PM" />
                         </div>
 
                         <div className="mt-2 -mb-1">
@@ -104,7 +104,7 @@ export default function AccomodationsFormPage() {
                             <input type="text" 
                                     value={checkOut}
                                     onChange={e => setCheckOut(e.target.value)} 
-                                    placeholder="10PM" />
+                                    placeholder="10AM" />
                         </div>
 
                         <div className="mt-2 -mb-1">
