@@ -25,7 +25,7 @@ export default function AccomodationPage() {
             <div className="absolute inset-0 bg-white text-black min-h-screen">
                 <div className="p-8 grid gap-4">
                     <div>
-                        <h2 className="text-2xl">{accomodation.title}</h2>
+                        <h2 className="text-2xl mr-36">{accomodation.title}</h2>
                         <button onClick={() => setShowAllPhotos(false)} className="fixed right-12 top-8 py-2 px-4 rounded-2xl shadow shadow-black">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                 <path fill-rule="evenodd" d="M11.03 3.97a.75.75 0 0 1 0 1.06l-6.22 6.22H21a.75.75 0 0 1 0 1.5H4.81l6.22 6.22a.75.75 0 1 1-1.06 1.06l-7.5-7.5a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
@@ -43,24 +43,24 @@ export default function AccomodationPage() {
     }
 
     return (
-        <div className="mt-8 bg-gray-100 -mx-8 px-8 py-8">
+        <div className="mt-4 bg-gray-100 -mx-8 px-8 pt-8">
             <h1 className="text-2xl font-bold">{accomodation.title}</h1>
             <div className="relative">
                 <div className="grid gap-2 grid-cols-[2fr_1fr] rounded-3xl overflow-hidden p-8">
                     <div>
                         {accomodation.photos?.[0] && (
                             <div>
-                                <img className="aspect-square object-cover" src={'http://localhost:4000/uploads/' + accomodation.photos?.[0]} alt="" />
+                                <img onClick={() => setShowAllPhotos(true)} className="aspect-square cursor-pointer object-cover" src={'http://localhost:4000/uploads/' + accomodation.photos?.[0]} alt="" />
                             </div>
                         )}
                     </div>
                     <div className="grid">
                         {accomodation.photos?.[1] && (
-                            <img className="aspect-square object-cover" src={'http://localhost:4000/uploads/' + accomodation.photos?.[1]} alt="" />
+                            <img onClick={() => setShowAllPhotos(true)} className="aspect-square cursor-pointer object-cover" src={'http://localhost:4000/uploads/' + accomodation.photos?.[1]} alt="" />
                         )}
                         <div className="overflow-hidden">
                             {accomodation.photos?.[2] && (
-                            <img className="aspect-square object-cover relative top-2" src={'http://localhost:4000/uploads/' + accomodation.photos?.[2]} alt="" />
+                            <img onClick={() => setShowAllPhotos(true)} className="aspect-square cursor-pointer object-cover relative top-2" src={'http://localhost:4000/uploads/' + accomodation.photos?.[2]} alt="" />
                         )}
                         </div>
                     </div>
