@@ -1,5 +1,8 @@
-import { useState } from "react"
+import { useContext, useState, useEffect } from "react"
+import { Navigate } from "react-router-dom";
+import axios from "axios";
 import { differenceInCalendarDays } from "date-fns"
+import { UserContext } from "../context/UserContext";
 
 export default function Booking({ accomodation }) {
     const [checkIn, setCheckIn] = useState('');
@@ -7,10 +10,34 @@ export default function Booking({ accomodation }) {
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [numberOfGuests, setNumberOfGuests] = useState(1); 
+    const [redirect, setRedirect] = useState('');
+    const { user } = useContext(UserContext);
+
+    useEffect(() => {
+        if (user) {
+            setName(user.firstName)
+        }
+    }, [user]);
+
     let numberOfNights = 0; 
     if (checkIn && checkOut) {
         numberOfNights = differenceInCalendarDays(new Date(checkOut), new Date(checkIn));
     }
+
+    async function bookThisPlace() {
+        const res = await axios.post('/bookings', { 
+            checkIn, checkOut, numberOfGuests, name, phone,
+            accomodation:accomodation._id, 
+            price:numberOfNights * accomodation.price, 
+        });
+        const bookingId = res.data._id;
+        setRedirect(`/account/bookings/${bookingId}`);
+    }
+
+    if (redirect) {
+        return <Navigate to={redirect} />
+    }
+
 
     return (
         <div className="bg-white shadow p-4 rounded-2xl">
@@ -40,7 +67,7 @@ export default function Booking({ accomodation }) {
                                     </div>
                                     {numberOfNights > 0 && (
                                         <div className="py-3 px-4 border-t">
-                                            <label>Full Name:</label>
+                                            <label>First Name:</label>
                                             <input type="text"
                                                    value={name} 
                                                    onChange={e => setName(e.target.value)}/>
@@ -51,7 +78,7 @@ export default function Booking({ accomodation }) {
                                         </div>
                                     )}
                             </div>
-                            <button className="primary mt-4">
+                            <button onClick={bookThisPlace} className="primary mt-4">
                                 Reserve
                                 {numberOfNights > 0 && (
                                     <span> ${ numberOfNights * accomodation.price }</span>
